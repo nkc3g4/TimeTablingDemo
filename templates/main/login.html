@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body class="text-center">
+<div class="container" style="max-width: 400px;">
+          
+    <form class="form-signin" action="/login/" method="post">{% csrf_token %}
+        <div class="form-group">
+            <h2 class="form-signin-heading">Please sign in</h2>
+        </div>
+        <div class="form-group">
+
+            <label for="inputEmail" class="sr-only">User ID</label>
+            <input type="text" id="inputid" name="inputid" class="form-control"
+                   οnkeyup="value=value.replace(/[^\d]/g,'')" placeholder="ID" required autofocus>
+        </div>
+        <div class="form-group">
+
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword" name="password" value="" class="form-control"
+                   placeholder="Password" required>
+        </div>
+
+        <div class="form-group">
+            <label style="color:red;">
+                {{ status }}
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" id="check" type="submit">Sign in</button>
+    </form>
+
+</div>
+</body>
+</html>

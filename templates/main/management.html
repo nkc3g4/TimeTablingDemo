@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Course Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+</head>
+<body>
+{% include "nav.html" %}
+
+<div class="container">
+    <h2>Course Management</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Module Code</th>
+            <th>Module Name</th>
+            <th>Semester</th>
+            <th>Coordinator</th>
+            <th>Enrolled</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for c in course_list %}
+            <tr>
+                <td>{{ c.module_code }} </td>
+                <td>{{ c.module_name }}</td>
+                <td>{{ c.semester }}</td>
+                <td>{{ c.coordinator }}</td>
+                <td>{{ c.enrolled }}</td>
+                <td><a href="/taught/{{ c.crn }}">View Lec</a></td>
+                <td><a href="/course/{{ c.module_code }}">Edit</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

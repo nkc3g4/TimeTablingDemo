@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Personal Preferences</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+</head>
+<body>
+{% include "nav.html" %}
+
+
+<form action="/preferences/" method="post">{% csrf_token %}
+
+    <div class="container" style="display: flex;justify-content: center;">
+        <div>
+            <h3>Time</h3>
+            <div class="btn-group" data-toggle="buttons-checkbox">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Mon</th>
+                        <th>Tue</th>
+                        <th>Wed</th>
+                        <th>Thu</th>
+                        <th>Fri</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                    </tr>
+                    {% for k,t in time_list.items %}
+                        <tr>
+                            <td>{{ t }}</td>
+                            {% for w in week_list %}
+                                <td><label class="btn btn-light "><input type="checkbox" id="{{ w|add:k }}"
+                                                                         name="{{ w|add:k }}" {{ value_list|one_more:k|get_item_checkbox:w }}></label>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+        </div>
+        <div style="width: 50px">
+
+        </div>
+        <div>
+            <h3>Room</h3>
+            <h6>
+                Facilities Required
+            </h6>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="checkbox" name="projector">Projector
+                </label>
+            </div>
+            <div class="form-check">
+                <label class=" form-check-label">
+                    <input type="checkbox" name="whiteboard">Whiteboard </label>
+            </div>
+            <div class="form-check">
+                <label class=" form-check-label">
+                    <input type="checkbox" name="whiteboard">PowerSockets </label>
+            </div>
+
+            <div class="form-check">
+                <label class=" form-check-label">
+                    <input type="checkbox" name="whiteboard">Wired Network </label>
+            </div>
+            <div style="height: 20px">
+            </div>
+            <h6>
+                Avoid these rooms
+            </h6>
+            <div>
+                <ul class="list-group">
+                    {% for r in room_list %}
+
+                        <li class="list-group-item">
+                            <div class="form-check">
+                                <label class=" form-check-label">
+                                    <input type="checkbox" name="rooms">{{ r }} </label>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+
+        </div>
+
+    </div>
+</form>
+
+</body>
+</html>

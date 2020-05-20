@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Room Usage Optimisation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+</head>
+<body>
+{% include "nav.html" %}
+
+<form action="/optimisation/" method="post">{% csrf_token %}
+
+    <div class="container">
+        <h2>Optimisation</h2>
+        <div class="form-check" style="margin-bottom: 10px;">
+            <button class="btn btn-primary" type="submit">Optimize</button>
+        </div>
+
+        <div class="form-check">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Module Name</th>
+                    <th>Time</th>
+                    <th>Student Amount</th>
+                    <th>Room Capacity</th>
+                    <th>Usage Percentage</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for c in view_list %}
+                    <tr>
+                        <td>{{ c.module_name }} </td>
+                        <td>{{ c.timestr }}</td>
+                        <td>{{ c.enrolled }}</td>
+                        <td>{{ c.capacity }}</td>
+                        <td>{{ c.percentage }}</td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</form>
+{{ c }}
+</body>
+</html>

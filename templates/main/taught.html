@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Course Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+</head>
+<body>
+{% include "nav.html" %}
+
+<div class="container">
+    <h2>{{ module_name }}</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Type</th>
+            <th>Day</th>
+            <th>Weeks</th>
+            <th>StartTime</th>
+            <th>FinishTime</th>
+            <th>Room</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for t in taught_list %}
+            <tr>
+                <td>{{ t.type }} </td>
+                <td>{{ t.day }}</td>
+                <td>{{ t.weeks }}</td>
+                <td>{{ t.starttime }}</td>
+                <td>{{ t.finishtime }}</td>
+                <td>{{ t.room }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

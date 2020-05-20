@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Course Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+</head>
+<body>
+{% include "nav.html" %}
+
+<div class="container">
+    <h2>Course Edit</h2>
+    <form action="/courseedit/" method="post">
+        <div class="form-group">
+            <label for="code">Module Code</label>
+            <input type="text" class="form-control" id="code" value="{{ code }}" readonly="readonly">
+        </div>
+        <div class="form-group">
+            <label for="name">Module Name</label>
+            <input type="text" class="form-control" id="name" value="{{ module_name }}" readonly="readonly">
+        </div>
+        <div class="form-group">
+            <label for="semester">Semester</label>
+            <input type="text" class="form-control" id="semester" value="{{ semester }}">
+        </div>
+        <div class="form-group">
+            <label for="enrolled">Enrolled</label>
+            <input type="text" class="form-control" id="enrolled" value="{{ enrolled }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+</div>
+</body>
+</html>

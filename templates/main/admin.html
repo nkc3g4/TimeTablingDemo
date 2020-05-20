@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+</head>
+<body>
+{% include "nav.html" %}
+
+<form action="/viewchanges/" method="post">{% csrf_token %}
+
+    <div class="container">
+        <h2>Changes Approval Page</h2>
+        <p></p>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Module Code</th>
+                <th>Original Time</th>
+                <th>Changed Time</th>
+                <th>Room</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for c in awaitList %}
+                <tr>
+                    <td>{{ c.cid|slice:"0:9" }} </td>
+                    <td>{{ c.ori_day }} {{ c.ori_start_time_hour }}:{{ c.ori_start_time_minute }}
+                        - {{ c.ori_finish_time_hour }}:{{ c.ori_finish_time_minute }}</td>
+                    <td>{{ c.start_time }}
+                        - {{ c.finish_time }}</td>
+
+                    <td>{{ c.room }}</td>
+                    <td>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" value="" name="REJ{{ c.cid }}"
+                                       id="REJ{{ c.cid }}">Reject
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">Approve</button>
+
+    </div>
+</form>
+{{ c }}
+</body>
+</html>

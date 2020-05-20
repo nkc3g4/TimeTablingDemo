@@ -1,0 +1,368 @@
+{% load static %}
+<!doctype html>
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>Mini calendar in the scheduler header</title>
+</head>
+<script src="{% static 'codebase/dhtmlxscheduler.js' %}?v=5.2.5" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="{% static 'codebase/dhtmlxscheduler_material.css' %}?v=5.2.5" type="text/css"
+      charset="utf-8">
+
+<script src="{% static 'codebase/ext/dhtmlxscheduler_minical.js' %}?v=5.2.5" type="text/javascript"
+        charset="utf-8"></script>
+<script src="{% static 'codebase/ext/dhtmlxscheduler_collision.js' %}?v=5.2.5" type="text/javascript"
+        charset="utf-8"></script>
+
+<script src="{% static 'codebase/ext/dhtmlxscheduler_limit.js' %}?v=5.2.5" type="text/javascript"
+        charset="utf-8"></script>
+<script src="{% static 'codebase/jquery-3.4.1.min.js' %}" type="text/javascript"
+        charset="utf-8"></script>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+<style type="text/css">
+    html, body {
+        margin: 0px;
+        padding: 0px;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .red_section {
+        background-color: red;
+        opacity: 0.25;
+        filter: alpha(opacity=25);
+    }
+
+</style>
+
+<script type="text/javascript" charset="utf-8">
+    const toSqlDatetime = (inputDate) => {
+        const date = new Date(inputDate)
+        const dateWithOffest = new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
+        return dateWithOffest
+            .toISOString()
+            .slice(0, 19)
+            .replace('T', ' ')
+    };
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var csrftoken = getCookie('csrftoken');
+
+    var dblclick_time = null;
+
+    function init() {
+        scheduler.config.multi_day = true;
+        scheduler.config.first_hour = 9;
+        scheduler.config.last_hour = 18;
+        scheduler.config.hour_size_px = 88;
+        scheduler.config.time_step = 60;
+        scheduler.config.drag_resize = false;
+
+        scheduler.init('scheduler_here', new Date(2017, 8, 11), "week");
+        scheduler.load('/schedule');
+        scheduler.attachEvent("onEmptyDblClick", function (date, e) {
+            $('#module_time').val(date);
+            $('#newEventModal').modal('show');
+
+            console.log(date);
+        });
+        {#scheduler.attachEvent("onDblClick", function (id, e) { #}
+        {#    console.log('DoubleClick');#}
+        {#    $('#module_id').val(id);#}
+        {#    var eventObj = scheduler.getEvent(id);#}
+        {#    $('#module_desc').val(eventObj.text);#}
+        {#    $('#editEventModal').modal('show');#}
+        {#    return true;#}
+
+        // });
+
+        scheduler.attachEvent("onEventChanged", function (id, ev) {
+            $.post("/changes/", {
+                "csrfmiddlewaretoken": csrftoken,
+                "id": ev.id,
+                "start_date": toSqlDatetime(ev.start_date),
+                "end_date": toSqlDatetime(ev.end_date)
+            });
+            //console.log(ev);
+        });
+        scheduler.attachEvent("onEventDeleted", function (id, ev) {
+            $.post("/changes/", {
+                "csrfmiddlewaretoken": csrftoken,
+                "id": ev.id,
+                "start_date": toSqlDatetime(ev.start_date),
+                "end_date": "1970-01-01 00:00"
+            });
+            console.log(ev);
+
+            // custom code
+        });
+
+
+        scheduler.attachEvent("onBeforeDrag", function (id, mode, e) {
+
+            $.getJSON("/conflictzone/" + id + "/1/", function (result) {
+                //console.log(result);
+                scheduler.markTimespan({
+                    days: 1,               // marks each Friday
+                    zones: result,       // marks the entire day
+                    css: "red_section",   // the name of applied CSS class
+                    type: "dhx_time_block"
+                });
+            });
+            $.getJSON("/conflictzone/" + id + "/2/", function (result) {
+                scheduler.markTimespan({
+                    days: 2,               // marks each Friday
+                    zones: result,       // marks the entire day
+                    css: "red_section",   // the name of applied CSS class
+                    type: "dhx_time_block"
+                });
+            });
+            $.getJSON("/conflictzone/" + id + "/3/", function (result) {
+                scheduler.markTimespan({
+                    days: 3,               // marks each Friday
+                    zones: result,       // marks the entire day
+                    css: "red_section",   // the name of applied CSS class
+                    type: "dhx_time_block"
+                });
+            });
+            $.getJSON("/conflictzone/" + id + "/4/", function (result) {
+                scheduler.markTimespan({
+                    days: 4,               // marks each Friday
+                    zones: result,       // marks the entire day
+                    css: "red_section",   // the name of applied CSS class
+                    type: "dhx_time_block"
+                });
+            });
+            $.getJSON("/conflictzone/" + id + "/5/", function (result) {
+                scheduler.markTimespan({
+                    days: 5,               // marks each Friday
+                    zones: result,       // marks the entire day
+                    css: "red_section",   // the name of applied CSS class
+                    type: "dhx_time_block"
+                });
+            });
+            console.log("UpdateView");
+
+
+            //scheduler.updateView();
+
+            //any custom logic here
+            return true;
+        });
+        scheduler.attachEvent("onDragEnd", function (id, mode, e) {
+            console.log("OnDragEnd");
+            //scheduler.deleteMarkedTimespan();
+            scheduler.updateView();
+
+            //clearTimeout(dblclick_time);
+
+            return true;
+        });
+
+
+    }
+
+    function deleteChanges(id) {
+        console.log(csrftoken);
+        $.post("/deletechanges/", {
+            "csrfmiddlewaretoken": csrftoken,
+            "id": id
+        });
+        location.reload();
+    }
+
+    function show_minical() {
+        if (scheduler.isCalendarVisible())
+            scheduler.destroyCalendar();
+        else
+            scheduler.renderCalendar({
+                position: "dhx_minical_icon",
+                date: scheduler.getState().date,
+                navigation: true,
+                handler: function (date, calendar) {
+                    scheduler.setCurrentView(date);
+                    scheduler.destroyCalendar()
+                }
+            });
+    }
+
+
+</script>
+
+<body onload="init();">
+{% include "nav.html" %}
+
+
+<div id="scheduler_here" class="dhx_cal_container" style="width: 80%;height: 100%;float:left; display:inline">
+    <div class="dhx_cal_navline">
+        <div class="dhx_cal_prev_button">&nbsp;</div>
+        <div class="dhx_cal_next_button">&nbsp;</div>
+        <div class="dhx_cal_today_button"></div>
+        <div class="dhx_cal_date"></div>
+        <div class="dhx_minical_icon" id="dhx_minical_icon" onclick="show_minical()">&nbsp;</div>
+        <div class="dhx_cal_tab" name="day_tab" style="right:204px;"></div>
+        <div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
+        <div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
+    </div>
+    <div class="dhx_cal_header">
+        Header
+    </div>
+    <div class="dhx_cal_data">
+        CalData
+    </div>
+</div>
+
+<div style="width: 20%;float:left; display:inline">
+    <div>
+        <div class="form-group"></div>
+
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#newEventModal">New</button>
+
+        <div class="modal fade" id="newEventModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h4 class="modal-title">New Event</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="module_time">Start Time</label>
+                            <input type="text" class="form-control" id="module_time" readonly="readonly">
+
+                            <label for="module_code">Module Code</label>
+                            <input type="text" class="form-control" id="module_code">
+                            <label for="ev_len">Length (Hour)</label>
+                            <input type="text" class="form-control" id="ev_len">
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="addnewEvents()" data-dismiss="modal">
+                            Submit
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="editEventModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h4 class="modal-title">Edit Event</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group">
+
+                            <input type="hidden" id="module_id">
+
+                            <label for="module_code">Module Description</label>
+                            <input type="text" class="form-control" id="module_desc">
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="deleteEvents()" data-dismiss="modal">
+                            Delete Event
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <script type="text/javascript" charset="utf-8">
+            function addnewEvents() {
+                module_code = $("#module_code").val();
+                module_len = $("#ev_len").val();
+                module_start_date = $('#module_time').val();
+                var dt = new Date(module_start_date);
+                //
+                // console.log(dt);
+                //var start_datetime = scheduler.date.str_to_date(module_start_date, false, false);
+
+                scheduler.addEvent({
+                    start_date: dt,
+                    end_date: scheduler.date.add(dt, module_len, "hour"),
+                    text: module_code,
+                    id: module_code + "01" + "0000" + "99"
+                });
+            }
+
+            function deleteEvents() {
+                module_id = $("module_id").val();
+                scheduler.deleteEvent(module_id);
+
+            }
+
+            function submitChanges() {
+                $.getJSON("/submitchanges/", function (data) {
+                    alert('Success');
+                    location.reload();
+                });
+            }
+
+
+        </script>
+        <button type="button" class="dhtmlx_button" onclick="submitChanges()">Submit Change</button>
+
+    </div>
+    <div class="dhtmlx-info">
+        Changes Submitted and waiting for approval
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Module Code</th>
+                <th>Changed Time</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for c in awaitList %}
+                <tr>
+                    <td>{{ c.id|slice:"0:9" }} </td>
+                    <td>{{ c.startTime|date:"l" }} {{ c.startTime|date:"H" }}:{{ c.startTime|date:"i" }}
+                        - {{ c.finishTime|date:"H" }}:{{ c.finishTime|date:"i" }}</td>
+                    <td>
+                        <button onclick="deleteChanges('{{ c.id }}')">X</button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
