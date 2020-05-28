@@ -17,3 +17,6 @@ Usage
 3. visit http://127.0.0.1:8000/index/
 
 
+Test user
+userid： 1
+password： 1
