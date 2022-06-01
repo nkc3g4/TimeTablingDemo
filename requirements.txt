@@ -69,7 +69,7 @@ HeapDict==1.0.1
 hpack==3.0.0
 hstspreload==2020.3.31
 html5lib==1.0.1
-httpx==0.12.1
+httpx==0.23.0
 hyperframe==5.2.0
 idna==2.8
 imageio==2.6.0
